@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Puzzle02 {
-  private static URL resource = Puzzle01.class.getResource("/puzzleinput02.txt");
+  private static URL resource = Puzzle02.class.getResource("/puzzleinput02.txt");
 
   private static HashMap<Character, Integer> pointMap;
   static {
