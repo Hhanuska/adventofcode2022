@@ -29,7 +29,7 @@ public class Puzzle04 {
   public static void main(String[] args) throws URISyntaxException, FileNotFoundException {
     ArrayList<String> lines = readFile();
     System.out.println("Solution 1: " + solve01(lines));
-    System.out.println("Solution 1: " + solve02(lines));
+    System.out.println("Solution 2: " + solve02(lines));
   }
 
   public static int solve01(ArrayList<String> lines) {

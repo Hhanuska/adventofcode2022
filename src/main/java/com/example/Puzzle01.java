@@ -14,7 +14,7 @@ public class Puzzle01 {
 
   public static void main(String[] args) throws URISyntaxException, FileNotFoundException {
     System.out.println("Solution 1: " + solve01());
-    System.out.println("Solution 1: " + solve02());
+    System.out.println("Solution 2: " + solve02());
   }
 
   public static int solve01() throws URISyntaxException, FileNotFoundException {
