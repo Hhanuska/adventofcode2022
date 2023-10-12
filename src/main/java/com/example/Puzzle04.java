@@ -29,7 +29,7 @@ public class Puzzle04 {
   public static void main(String[] args) throws URISyntaxException, FileNotFoundException {
     ArrayList<String> lines = readFile();
     System.out.println("Solution 1: " + solve01(lines));
-    // System.out.println("Solution 1: " + solve02());
+    System.out.println("Solution 1: " + solve02(lines));
   }
 
   public static int solve01(ArrayList<String> lines) {
@@ -46,6 +46,23 @@ public class Puzzle04 {
 
       if (sections[widerStartIndex] <= sections[narrowerStartIndex]
           && sections[widerStartIndex + 1] >= sections[narrowerStartIndex + 1]) {
+        counter++;
+      }
+    }
+
+    return counter;
+  }
+
+  public static int solve02(ArrayList<String> lines) {
+    int counter = 0;
+
+    for (String line : lines) {
+      int[] sections = Arrays.stream(line.split("-|,")).mapToInt(Integer::parseInt).toArray();
+
+      int lowerStartIndex = sections[0] <= sections[2] ? 0 : 2;
+      int higherStartIndex = lowerStartIndex == 0 ? 2 : 0;
+
+      if (sections[lowerStartIndex + 1] >= sections[higherStartIndex]) {
         counter++;
       }
     }
