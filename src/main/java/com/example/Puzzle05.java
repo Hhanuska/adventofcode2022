@@ -31,7 +31,7 @@ public class Puzzle05 {
   public static void main(String[] args) throws URISyntaxException, FileNotFoundException {
     ArrayList<String> lines = readFile();
     System.out.println("Solution 1: " + solve01(lines));
-    // System.out.println("Solution 1: " + solve02(lines));
+    System.out.println("Solution 2: " + solve02(lines));
   }
 
   public static ArrayList<Stack<Character>> fillStacks(ArrayList<String> lines) {
@@ -97,6 +97,40 @@ public class Puzzle05 {
     for (int i = instructionsStartIndex; i < lines.size(); i++) {
       String move = lines.get(i);
       executeMove(stacks, move);
+    }
+
+    String toReturn = "";
+    for (int i = 0; i < stacks.size(); i++) {
+      toReturn += stacks.get(i).peek();
+    }
+
+    return toReturn;
+  }
+
+  public static void executeMove2(ArrayList<Stack<Character>> stacks, String move) {
+    String[] parts = move.split(" ");
+    int amount = Integer.parseInt(parts[1]);
+    int from = Integer.parseInt(parts[3]) - 1;
+    int to = Integer.parseInt(parts[5]) - 1;
+
+    ArrayList<Character> crates = new ArrayList<>();
+    for (int i = 0; i < amount; i++) {
+      char crate = stacks.get(from).pop();
+      crates.add(crate);
+    }
+
+    for (int i = crates.size() - 1; i >= 0; i--) {
+      stacks.get(to).push(crates.get(i));
+    }
+  }
+
+  public static String solve02(ArrayList<String> lines) {
+    ArrayList<Stack<Character>> stacks = fillStacks(lines);
+    int instructionsStartIndex = lines.indexOf("") + 1;
+
+    for (int i = instructionsStartIndex; i < lines.size(); i++) {
+      String move = lines.get(i);
+      executeMove2(stacks, move);
     }
 
     String toReturn = "";
