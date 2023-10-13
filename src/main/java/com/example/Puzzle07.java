@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -16,7 +18,7 @@ public class Puzzle07 {
   public static void main(String[] args) throws URISyntaxException, FileNotFoundException, IOException {
     FileSystem fs = createFileSystem();
     System.out.println("Solution 1: " + solve01(fs.getCurrentNode()));
-    // System.out.println("Solution 2: " + solve02());
+    System.out.println("Solution 2: " + solve02(fs.getCurrentNode()));
   }
 
   public static FileSystem createFileSystem() throws URISyntaxException, FileNotFoundException {
@@ -73,6 +75,27 @@ public class Puzzle07 {
     }
 
     return totalSizeToReturn;
+  }
+
+  public static int solve02(Node fs) {
+    int spaceNeeded = 30_000_000 - (70_000_000 - fs.getSize());
+    ArrayList<Integer> dirs = new ArrayList<>();
+    fillQualifiedDirs(fs, spaceNeeded, dirs);
+
+    return dirs.stream().mapToInt(val -> val).min().orElseThrow(NoSuchElementException::new);
+  }
+
+  public static void fillQualifiedDirs(Node fs, int minSize, ArrayList<Integer> dirs) {
+    int totalFsSize = fs.getSize();
+    if (totalFsSize > minSize) {
+      dirs.add(totalFsSize);
+    }
+
+    for (String key : fs.getChildren().keySet()) {
+      if (fs.getChild(key).getFileSize() == 0) {
+        fillQualifiedDirs(fs.getChild(key), minSize, dirs);
+      }
+    }
   }
 
   private static class FileSystem {
