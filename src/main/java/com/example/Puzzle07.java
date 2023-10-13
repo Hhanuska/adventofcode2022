@@ -15,7 +15,7 @@ import java.util.Set;
 public class Puzzle07 {
   private static URL resource = Puzzle07.class.getResource("/puzzleinput07.txt");
 
-  public static void main(String[] args) throws URISyntaxException, FileNotFoundException, IOException {
+  public static void main(String[] args) throws URISyntaxException, FileNotFoundException {
     FileSystem fs = createFileSystem();
     System.out.println("Solution 1: " + solve01(fs.getCurrentNode()));
     System.out.println("Solution 2: " + solve02(fs.getCurrentNode()));
