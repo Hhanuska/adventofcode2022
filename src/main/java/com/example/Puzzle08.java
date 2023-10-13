@@ -14,7 +14,7 @@ public class Puzzle08 {
   public static void main(String[] args) throws URISyntaxException, FileNotFoundException {
     ArrayList<ArrayList<Integer>> grid = createGrid();
     System.out.println("Solution 1: " + solve01(grid));
-    // System.out.println("Solution 2: " + solve02());
+    System.out.println("Solution 2: " + solve02(grid));
   }
 
   public static ArrayList<ArrayList<Integer>> createGrid() throws URISyntaxException, FileNotFoundException {
@@ -115,5 +115,59 @@ public class Puzzle08 {
     }
 
     return visible;
+  }
+
+  public static int solve02(ArrayList<ArrayList<Integer>> grid) {
+    int max = 0;
+
+    for (int row = 0; row < grid.size(); row++) {
+      for (int col = 0; col < grid.get(row).size(); col++) {
+        int ss = getScenicScore(grid, row, col);
+        if (ss > max) {
+          max = ss;
+        }
+      }
+    }
+
+    return max;
+  }
+
+  public static int getScenicScore(ArrayList<ArrayList<Integer>> grid, int row, int col) {
+    int left = 0;
+    int right = 0;
+    int top = 0;
+    int bottom = 0;
+
+    int treeSize = grid.get(row).get(col);
+
+    // left and right
+    for (int colCheck = col - 1; colCheck >= 0; colCheck--) {
+      left++;
+      if (grid.get(row).get(colCheck) >= treeSize) {
+        break;
+      }
+    }
+    for (int colCheck = col + 1; colCheck < grid.get(row).size(); colCheck++) {
+      right++;
+      if (grid.get(row).get(colCheck) >= treeSize) {
+        break;
+      }
+    }
+
+    // top and bottom
+    for (int rowCheck = row - 1; rowCheck >= 0; rowCheck--) {
+      top++;
+      if (grid.get(rowCheck).get(col) >= treeSize) {
+        break;
+      }
+    }
+    for (int rowCheck = row + 1; rowCheck < grid.size(); rowCheck++) {
+      bottom++;
+      if (grid.get(rowCheck).get(col) >= treeSize) {
+        break;
+      }
+    }
+
+    return left * right * top * bottom;
   }
 }
