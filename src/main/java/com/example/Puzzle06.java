@@ -17,7 +17,7 @@ public class Puzzle06 {
 
   public static void main(String[] args) throws URISyntaxException, FileNotFoundException, IOException {
     System.out.println("Solution 1: " + solve01());
-    // System.out.println("Solution 2: " + solve02());
+    System.out.println("Solution 2: " + solve02());
   }
 
   public static int solve01() throws URISyntaxException, FileNotFoundException, IOException {
@@ -43,6 +43,37 @@ public class Puzzle06 {
       counter++;
 
       if (last4.size() > 4) {
+        last4.remove(0);
+      }
+    }
+    inputStream.close();
+    return 0;
+  }
+
+  // TODO: Don't duplicate code
+  public static int solve02() throws URISyntaxException, FileNotFoundException, IOException {
+    File file = Paths.get(resource.toURI()).toFile();
+    InputStream inputStream = new FileInputStream(file);
+
+    ArrayList<Character> last4 = new ArrayList<>();
+
+    int counter = 0;
+
+    while (inputStream.available() > 0) {
+      if (last4.size() == 14) {
+        Set<Character> set = new HashSet<>(last4);
+        if (set.size() == last4.size()) {
+          inputStream.close();
+
+          return counter;
+        }
+      }
+
+      char c = (char) (inputStream.read());
+      last4.add(c);
+      counter++;
+
+      if (last4.size() > 14) {
         last4.remove(0);
       }
     }
