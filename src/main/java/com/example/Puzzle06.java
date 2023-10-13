@@ -15,12 +15,12 @@ import java.util.Set;
 public class Puzzle06 {
   private static URL resource = Puzzle06.class.getResource("/puzzleinput06.txt");
 
-  public static void main(String[] args) throws URISyntaxException, FileNotFoundException, IOException {
+  public static void main(String[] args) throws URISyntaxException, IOException {
     System.out.println("Solution 1: " + solve01());
     System.out.println("Solution 2: " + solve02());
   }
 
-  public static int solve01() throws URISyntaxException, FileNotFoundException, IOException {
+  public static int solve01() throws URISyntaxException, IOException {
     File file = Paths.get(resource.toURI()).toFile();
     InputStream inputStream = new FileInputStream(file);
 
