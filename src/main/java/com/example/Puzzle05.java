@@ -40,7 +40,6 @@ public class Puzzle05 {
     stackNums.removeIf((str) -> {
       return str.isEmpty();
     });
-    System.out.println("Stacks: " + stackNums);
 
     ArrayList<Stack<Character>> stacks = new ArrayList<>();
 
