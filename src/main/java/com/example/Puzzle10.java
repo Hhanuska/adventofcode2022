@@ -15,13 +15,12 @@ public class Puzzle10 {
     // System.out.println("Solution 2: " + solve02());
   }
 
-  private static int register = 1;
-
   public static int solve01() throws URISyntaxException, IOException {
     List<String> lines = Files.readAllLines(Paths.get(resource.toURI()));
 
     int sum = 0;
     int cycle = 0;
+    int register = 1;
     for (String line : lines) {
       String[] parts = line.split(" ");
       cycle++;
@@ -40,14 +39,9 @@ public class Puzzle10 {
         sum += register * cycle;
       }
 
-      addx(Integer.parseInt(parts[1]));
+      register += Integer.parseInt(parts[1]);
     }
 
     return sum;
-  }
-
-  private static int addx(int val) {
-    register += val;
-    return register;
   }
 }
