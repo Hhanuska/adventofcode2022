@@ -14,12 +14,12 @@ public class Puzzle11 {
   private static URL resource = Puzzle11.class.getResource("/puzzleinput11.txt");
 
   public static void main(String[] args) throws URISyntaxException, IOException {
-    Monkeys monkeys = new Monkeys();
-    System.out.println("Solution 1: " + solve01(monkeys));
-    // System.out.println("Solution 2: " + solve02());
+    System.out.println("Solution 1: " + solve01());
+    System.out.println("Solution 2: " + solve02());
   }
 
-  public static int solve01(Monkeys monkeys) {
+  public static int solve01() throws URISyntaxException, IOException {
+    Monkeys monkeys = new Monkeys();
     for (int i = 0; i < 20; i++) {
       monkeys.round();
     }
@@ -30,8 +30,20 @@ public class Puzzle11 {
     return counts[counts.length - 1] * counts[counts.length - 2];
   }
 
+  public static long solve02() throws URISyntaxException, IOException {
+    Monkeys2 monkeys = new Monkeys2();
+    for (int i = 0; i < 10000; i++) {
+      monkeys.round();
+    }
+
+    long[] counts = monkeys.get().stream().mapToLong((m) -> m.getInspectCount()).toArray();
+    Arrays.sort(counts);
+
+    return counts[counts.length - 1] * counts[counts.length - 2];
+  }
+
   private static class Monkeys {
-    private ArrayList<Monkey> monkeys = new ArrayList<>();
+    protected ArrayList<Monkey> monkeys = new ArrayList<>();
 
     public Monkeys() throws URISyntaxException, IOException {
       List<String> lines = Files.readAllLines(Paths.get(resource.toURI()));
@@ -77,7 +89,7 @@ public class Puzzle11 {
     public void round() {
       for (Monkey monkey : monkeys) {
         while (monkey.hasItem()) {
-          int wl = monkey.getNextItem();
+          long wl = monkey.getNextItem();
           wl = monkey.getOperation().getNewWorryLevel(wl);
           wl /= 3;
           int nextMonkeyIndex = monkey.getTest().getTargetMonkey(wl);
@@ -91,17 +103,44 @@ public class Puzzle11 {
     }
   }
 
+  private static class Monkeys2 extends Monkeys {
+    private int modulo;
+
+    public Monkeys2() throws URISyntaxException, IOException {
+      super();
+
+      int divProd = 1;
+      for (Monkey monkey : monkeys) {
+        divProd *= monkey.getTest().getDiv();
+      }
+      this.modulo = divProd;
+    }
+
+    @Override
+    public void round() {
+      for (Monkey monkey : monkeys) {
+        while (monkey.hasItem()) {
+          long wl = monkey.getNextItem();
+          wl = monkey.getOperation().getNewWorryLevel(wl);
+          wl %= this.modulo;
+          int nextMonkeyIndex = monkey.getTest().getTargetMonkey(wl);
+          monkeys.get(nextMonkeyIndex).addItem(wl);
+        }
+      }
+    }
+  }
+
   private static class Monkey {
-    private LinkedList<Integer> items = new LinkedList<>();
+    private LinkedList<Long> items = new LinkedList<>();
     private Operation op;
     private Test test;
     private int inspectCount = 0;
 
-    public void addItem(int worryLevel) {
+    public void addItem(long worryLevel) {
       items.add(worryLevel);
     }
 
-    public int getNextItem() {
+    public long getNextItem() {
       this.inspectCount++;
       return this.items.removeFirst();
     }
@@ -140,8 +179,8 @@ public class Puzzle11 {
       this.val = val;
     }
 
-    public int getNewWorryLevel(int worryLevel) {
-      int _val = val.equals("old") ? worryLevel : Integer.parseInt(val);
+    public long getNewWorryLevel(long worryLevel) {
+      long _val = val.equals("old") ? worryLevel : Long.parseLong(val);
       if (op.equals("*")) {
         return worryLevel * _val;
       } else {
@@ -167,8 +206,12 @@ public class Puzzle11 {
       this.falseMonkey = fm;
     }
 
-    public int getTargetMonkey(int worryLevel) {
+    public int getTargetMonkey(long worryLevel) {
       return worryLevel % div == 0 ? trueMonkey : falseMonkey;
+    }
+
+    public int getDiv() {
+      return this.div;
     }
   }
 }
