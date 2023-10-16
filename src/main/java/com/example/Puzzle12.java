@@ -49,7 +49,6 @@ public class Puzzle12 {
 
     private HashSet<String> unvisited = new HashSet<>();
 
-    private Coords start;
     private Coords end;
 
     public HeightMap(List<String> lines) {
@@ -66,7 +65,7 @@ public class Puzzle12 {
           String id = this.getId(i, j);
           if (c == 'S') {
             this.heightMap[i][j] = (int) 'a';
-            this.start = new Coords(i, j);
+            // set starting point
             this.distances[i][j] = 0;
           } else if (c == 'E') {
             this.heightMap[i][j] = (int) 'z';
@@ -141,16 +140,8 @@ public class Puzzle12 {
       }
     }
 
-    public int[][] getHeightMap() {
-      return this.heightMap;
-    }
-
     public String getId(int row, int col) {
       return row + "-" + col;
-    }
-
-    public Coords getStart() {
-      return this.start;
     }
 
     public Coords getEnd() {
