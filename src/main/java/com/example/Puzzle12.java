@@ -17,7 +17,8 @@ public class Puzzle12 {
     List<String> lines = Files.readAllLines(Paths.get(resource.toURI()));
     HeightMap hm = new HeightMap(lines);
     System.out.println("Solution 1: " + solve01(hm));
-    // System.out.println("Solution 2: " + solve02());
+    HeightMapReversed hmr = new HeightMapReversed(lines);
+    System.out.println("Solution 2: " + solve02(hmr));
   }
 
   public static int solve01(HeightMap hm) {
@@ -43,12 +44,40 @@ public class Puzzle12 {
     return hm.getDistance(hm.getEnd().row, hm.getEnd().col);
   }
 
+  public static int solve02(HeightMapReversed hm) {
+    while (true) {
+      Coords check = hm.getLowestDistanceUnvisited();
+      if (check == null) {
+        // no more coords to check
+        break;
+      }
+
+      ArrayList<String> possibleMoves = hm.getPossibleMoves(check.row, check.col);
+      for (String direction : possibleMoves) {
+        Coords nextCoords = hm.getCoordsAfterMove(check.row, check.col, direction);
+        int nextDistance = hm.getDistance(check.row, check.col) + 1;
+        if (nextDistance < hm.getDistance(nextCoords.row, nextCoords.col)) {
+          hm.setDistance(nextCoords.row, nextCoords.col, nextDistance);
+        }
+        if (hm.getHeight(nextCoords.row, nextCoords.col) == (int) 'a') {
+          System.out.println(nextDistance);
+          return nextDistance;
+        }
+      }
+
+      hm.setVisited(hm.getId(check.row, check.col));
+    }
+
+    return Integer.MAX_VALUE;
+  }
+
   private static class HeightMap {
-    private int[][] heightMap;
-    private int[][] distances;
+    protected int[][] heightMap;
+    protected int[][] distances;
 
     private HashSet<String> unvisited = new HashSet<>();
 
+    private Coords start;
     private Coords end;
 
     public HeightMap(List<String> lines) {
@@ -65,7 +94,7 @@ public class Puzzle12 {
           String id = this.getId(i, j);
           if (c == 'S') {
             this.heightMap[i][j] = (int) 'a';
-            // set starting point
+            this.start = new Coords(i, j);
             this.distances[i][j] = 0;
           } else if (c == 'E') {
             this.heightMap[i][j] = (int) 'z';
@@ -103,11 +132,11 @@ public class Puzzle12 {
         return false;
       }
 
-      if (goalHeight <= startHeight + 1) {
-        return true;
-      } else {
-        return false;
-      }
+      return _canMove(startHeight, goalHeight);
+    }
+
+    protected boolean _canMove(int startHeight, int goalHeight) {
+      return goalHeight <= startHeight + 1;
     }
 
     public ArrayList<String> getPossibleMoves(int row, int col) {
@@ -146,6 +175,10 @@ public class Puzzle12 {
 
     public Coords getEnd() {
       return this.end;
+    }
+
+    public Coords getStart() {
+      return this.start;
     }
 
     public Coords getLowestDistanceUnvisited() {
@@ -200,6 +233,23 @@ public class Puzzle12 {
     public Coords(int row, int col) {
       this.row = row;
       this.col = col;
+    }
+  }
+
+  private static class HeightMapReversed extends HeightMap {
+    HeightMapReversed(List<String> lines) {
+      super(lines);
+      this.distances[this.getEnd().row][this.getEnd().col] = 0;
+      this.distances[this.getStart().row][this.getStart().col] = Integer.MAX_VALUE;
+    }
+
+    @Override
+    public boolean _canMove(int startHeight, int goalHeight) {
+      return startHeight <= goalHeight + 1;
+    }
+
+    public int getHeight(int row, int col) {
+      return this.heightMap[row][col];
     }
   }
 }
