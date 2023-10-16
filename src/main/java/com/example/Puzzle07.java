@@ -103,7 +103,7 @@ public class Puzzle07 {
     private Node currentNode;
 
     public FileSystem() {
-      this.root = new Node("/", 0, null);
+      this.root = new Node(0, null);
       this.currentNode = this.root;
     }
 
@@ -136,17 +136,15 @@ public class Puzzle07 {
   private static class Node {
     private HashMap<String, Node> children = new HashMap<>();
     private Node parent = null;
-    private String fileName = null;
     private int fileSize = 0;
 
-    public Node(String fileName, int fileSize, Node parent) {
-      this.fileName = fileName;
+    public Node(int fileSize, Node parent) {
       this.fileSize = fileSize;
       this.parent = parent;
     }
 
     public void addChild(String fileName, int fileSize) {
-      this.children.put(fileName, new Node(fileName, fileSize, this));
+      this.children.put(fileName, new Node(fileSize, this));
     }
 
     public HashMap<String, Node> getChildren() {
@@ -159,10 +157,6 @@ public class Puzzle07 {
 
     public Node getParent() {
       return this.parent;
-    }
-
-    public String getFileName() {
-      return this.fileName;
     }
 
     public int getFileSize() {
