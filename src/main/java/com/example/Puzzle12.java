@@ -38,8 +38,6 @@ public class Puzzle12 {
       }
 
       hm.setVisited(hm.getId(check.row, check.col));
-      System.out
-          .println("Visited: " + hm.getId(check.row, check.col) + " Distance: " + hm.getDistance(check.row, check.col));
     }
 
     return hm.getDistance(hm.getEnd().row, hm.getEnd().col);
