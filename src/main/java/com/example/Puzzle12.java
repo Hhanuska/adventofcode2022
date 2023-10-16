@@ -67,11 +67,11 @@ public class Puzzle12 {
           char c = lines.get(i).charAt(j);
           String id = this.getId(i, j);
           if (c == 'S') {
-            this.heightMap[i][j] = (int) 'a' - 1;
+            this.heightMap[i][j] = (int) 'a';
             this.start = new Coords(i, j);
             this.distances[i][j] = 0;
           } else if (c == 'E') {
-            this.heightMap[i][j] = (int) 'z' + 1;
+            this.heightMap[i][j] = (int) 'z';
             this.end = new Coords(i, j);
           } else {
             this.heightMap[i][j] = (int) c;
