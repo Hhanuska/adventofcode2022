@@ -15,6 +15,7 @@ public class Puzzle13 {
   public static void main(String[] args) throws URISyntaxException, IOException {
     List<String> lines = Files.readAllLines(Paths.get(resource.toURI()));
     System.out.println("Solution 1: " + solve01(lines));
+    System.out.println("Solution 2: " + solve02(lines));
   }
 
   public static int solve01(List<String> lines) {
@@ -31,6 +32,35 @@ public class Puzzle13 {
     }
 
     return sum;
+  }
+
+  public static int solve02(List<String> lines) {
+    String divider1 = "[[2]]";
+    String divider2 = "[[6]]";
+    lines.add(divider1);
+    lines.add(divider2);
+
+    for (int i = 0; i < lines.size(); i++) {
+      if (lines.get(i).isEmpty()) {
+        lines.remove(i);
+      }
+    }
+
+    lines.sort((line1, line2) -> {
+      JSONArray l1 = new JSONArray(line1);
+      JSONArray l2 = new JSONArray(line2);
+
+      Compare comparison = compare(l1, l2);
+      if (comparison == Compare.LOWER) {
+        return -1;
+      } else if (comparison == Compare.HIGHER) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+
+    return (lines.indexOf(divider1) + 1) * (lines.indexOf(divider2) + 1);
   }
 
   public static Compare compare(JSONArray a, JSONArray b) {
