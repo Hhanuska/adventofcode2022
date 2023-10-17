@@ -40,7 +40,6 @@ public class Puzzle13 {
       }
 
       Compare compResult = compare(a.get(i), b.get(i));
-      System.out.println(a.get(i) + " vs " + b.get(i) + " " + compResult);
 
       if (compResult == Compare.EQUAL) {
         if (i == a.length() - 1 && a.length() == b.length()) {
