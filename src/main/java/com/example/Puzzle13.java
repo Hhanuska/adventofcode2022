@@ -25,7 +25,6 @@ public class Puzzle13 {
       JSONArray right = new JSONArray(lines.get(i + 1));
 
       Compare comparison = compare(left, right);
-      System.out.println("Starting line: " + (i + 1) + " Index: " + (i / 3 + 1) + " Result: " + comparison);
       if (comparison == Compare.LOWER) {
         sum += i / 3 + 1;
       }
