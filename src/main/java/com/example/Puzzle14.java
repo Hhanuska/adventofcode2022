@@ -18,7 +18,7 @@ public class Puzzle14 {
     System.out.println(genLayout(lines));
   }
 
-  private static ArrayList<ArrayList<Boolean>> genLayout(List<String> lines) {
+  private static Layout genLayout(List<String> lines) {
     ArrayList<ArrayList<Boolean>> result = new ArrayList<>();
 
     ArrayList<ArrayList<int[]>> parsedLines = new ArrayList<>();
@@ -73,7 +73,7 @@ public class Puzzle14 {
       }
     }
 
-    return fillMissing(result);
+    return new Layout(fillMissing(result), new int[] { 500 - minX, 0 });
   }
 
   private static ArrayList<ArrayList<Boolean>> fillMissing(ArrayList<ArrayList<Boolean>> layout) {
@@ -108,6 +108,15 @@ public class Puzzle14 {
     return res;
   }
 
-  private static Pair<Integer, Integer> sandStart = new Pair<Integer, Integer>(500, 0);
-  private static Pair<Integer, Integer> sandStartConvert = new Pair<Integer, Integer>(0, 0);
+  private static class Layout {
+
+    private ArrayList<ArrayList<Boolean>> layout;
+
+    private int[] sand;
+
+    public Layout(ArrayList<ArrayList<Boolean>> l, int[] sand) {
+      this.layout = l;
+      this.sand = sand;
+    }
+  }
 }
