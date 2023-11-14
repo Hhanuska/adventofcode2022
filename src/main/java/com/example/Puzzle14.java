@@ -73,7 +73,25 @@ public class Puzzle14 {
       }
     }
 
-    return result;
+    return fillMissing(result);
+  }
+
+  private static ArrayList<ArrayList<Boolean>> fillMissing(ArrayList<ArrayList<Boolean>> layout) {
+    int maxLength = 0;
+
+    for (ArrayList<Boolean> col : layout) {
+      if (col.size() > maxLength) {
+        maxLength = col.size();
+      }
+    }
+
+    for (ArrayList<Boolean> col : layout) {
+      while (col.size() <= maxLength) {
+        col.add(false);
+      }
+    }
+
+    return layout;
   }
 
   private static ArrayList<int[]> parseLine(String line) {
