@@ -56,16 +56,18 @@ public class Puzzle14 {
           continue;
         }
 
-        boolean isX = prevCoords[0] == coords[0];
-        int axis = isX ? 0 : 1;
+        result = fillMissing(result);
+
+        boolean isX = prevCoords[0] == aCoords[0];
+        int axis = isX ? 1 : 0;
 
         int start = prevCoords[axis] < aCoords[axis] ? prevCoords[axis] : aCoords[axis];
         int end = prevCoords[axis] < aCoords[axis] ? aCoords[axis] : prevCoords[axis];
         for (int i = start; i <= end; i++) {
           if (isX) {
-            result.get(i).set(aCoords[1], true);
-          } else {
             result.get(aCoords[0]).set(i, true);
+          } else {
+            result.get(i).set(aCoords[1], true);
           }
         }
 
