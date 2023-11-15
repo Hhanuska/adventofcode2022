@@ -14,7 +14,7 @@ public class Puzzle14 {
 
   public static void main(String[] args) throws URISyntaxException, IOException {
     List<String> lines = Files.readAllLines(Paths.get(resource.toURI()));
-    System.out.println(solve01(lines));
+    System.out.println("Solution 1: " + solve01(lines));
   }
 
   public static int solve01(List<String> lines) {
@@ -34,7 +34,6 @@ public class Puzzle14 {
           sandPos = layout.nextPos(sandPos);
         }
       } catch (Exception e) {
-        e.printStackTrace();
         fin = true;
       }
 
