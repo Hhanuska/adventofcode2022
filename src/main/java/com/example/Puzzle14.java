@@ -88,7 +88,7 @@ public class Puzzle14 {
     }
 
     for (ArrayList<Boolean> col : layout) {
-      while (col.size() <= maxLength) {
+      while (col.size() < maxLength) {
         col.add(false);
       }
     }
