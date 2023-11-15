@@ -171,10 +171,6 @@ public class Puzzle14 {
     public boolean canMove(int[] pos) {
       int x = pos[0];
       int y = pos[1];
-      if (this.layout.get(x).get(y)) {
-        return this.canMove(new int[] { pos[0], pos[1] - 1 });
-      }
-
       if (this.layout.get(x).size() == y + 1) {
         return true;
       }
@@ -197,10 +193,6 @@ public class Puzzle14 {
     public int[] nextPos(int[] pos) {
       int x = pos[0];
       int y = pos[1];
-      if (this.layout.get(x).get(y)) {
-        return this.nextPos(new int[] { pos[0], pos[1] - 1 });
-      }
-
       if (this.layout.get(x).get(y + 1) == false) {
         return new int[] { x, y + 1 };
       }
