@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Puzzle14 {
@@ -15,6 +16,7 @@ public class Puzzle14 {
   public static void main(String[] args) throws URISyntaxException, IOException {
     List<String> lines = Files.readAllLines(Paths.get(resource.toURI()));
     System.out.println("Solution 1: " + solve01(lines));
+    System.out.println("Solution 2: " + solve02(lines));
   }
 
   public static int solve01(List<String> lines) {
@@ -38,6 +40,40 @@ public class Puzzle14 {
       }
 
       if (fin) {
+        break;
+      }
+
+      layout.setOccupied(sandPos);
+      counter++;
+
+      // System.out.println(counter);
+      // for (ArrayList<Boolean> e : layout.layout) {
+      // System.out.println(Arrays.toString(e.stream().map(el -> el ? "#" :
+      // ".").toArray()));
+      // }
+    }
+
+    return counter;
+  }
+
+  public static int solve02(List<String> lines) {
+    Layout layout = addFloor(genLayout(lines));
+    int counter = 0;
+
+    while (true) {
+      int[] sandCopy = Arrays.copyOf(layout.getSand(), layout.getSand().length);
+      int[] sandPos = new int[] { sandCopy[0] + layout.xOffset, sandCopy[1] };
+      boolean fin = false;
+      try {
+        while (layout.canMove(sandPos, true)) {
+          sandPos = layout.nextPos(sandPos);
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+        fin = true;
+      }
+
+      if (fin || layout.layout.get(sandPos[0]).get(sandPos[1])) {
         break;
       }
 
@@ -121,6 +157,18 @@ public class Puzzle14 {
     return new Layout(fillMissing(result), new int[] { 500 - minX, 0 });
   }
 
+  private static Layout addFloor(Layout l) {
+    for (ArrayList<Boolean> x : l.layout) {
+      x.add(false);
+    }
+
+    for (ArrayList<Boolean> x : l.layout) {
+      x.add(true);
+    }
+
+    return l;
+  }
+
   private static ArrayList<ArrayList<Boolean>> fillMissing(ArrayList<ArrayList<Boolean>> layout) {
     int maxLength = 0;
 
@@ -169,22 +217,77 @@ public class Puzzle14 {
     }
 
     public boolean canMove(int[] pos) {
+      return canMove(pos, false);
+    }
+
+    private int xOffset = 0;
+
+    public boolean canMove(int[] pos, boolean expandX) {
       int x = pos[0];
       int y = pos[1];
-      if (this.layout.get(x).size() == y + 1) {
-        return true;
+      try {
+        if (this.layout.get(x).size() == y + 1) {
+          return true;
+        }
+      } catch (Exception e) {
+        if (!expandX) {
+          throw e;
+        }
+
+        int len = this.layout.get(x - 1).size();
+        this.layout.add(new ArrayList<>(Collections.nCopies(len, false)));
+        this.layout.get(x).set(len - 1, true);
+        // System.out.println("Added x to end");
+        // for (ArrayList<Boolean> s : this.layout) {
+        // System.out.println(Arrays.toString(s.stream().map(el -> el ? "#" :
+        // ".").toArray()));
+        // }
+        return canMove(pos, expandX);
       }
 
       if (this.layout.get(x).get(y + 1) == false) {
         return true;
       }
 
-      if (this.layout.get(x - 1).get(y + 1) == false) {
-        return true;
+      try {
+        if (this.layout.get(x - 1).get(y + 1) == false) {
+          return true;
+        }
+      } catch (Exception e) {
+        if (!expandX) {
+          throw e;
+        }
+
+        int len = this.layout.get(x).size();
+        this.layout.add(0, new ArrayList<>(Collections.nCopies(len, false)));
+        this.layout.get(0).set(len - 1, true);
+        this.xOffset++;
+        // System.out.println("Added x to front");
+        // for (ArrayList<Boolean> s : this.layout) {
+        // System.out.println(Arrays.toString(s.stream().map(el -> el ? "#" :
+        // ".").toArray()));
+        // }
+        return canMove(new int[] { pos[0] + 1, pos[1] }, expandX);
       }
 
-      if (this.layout.get(x + 1).get(y + 1) == false) {
-        return true;
+      try {
+        if (this.layout.get(x + 1).get(y + 1) == false) {
+          return true;
+        }
+      } catch (Exception e) {
+        if (!expandX) {
+          throw e;
+        }
+
+        int len = this.layout.get(x).size();
+        this.layout.add(new ArrayList<>(Collections.nCopies(len, false)));
+        this.layout.get(x + 1).set(len - 1, true);
+        // System.out.println("Added x to front");
+        // for (ArrayList<Boolean> s : this.layout) {
+        // System.out.println(Arrays.toString(s.stream().map(el -> el ? "#" :
+        // ".").toArray()));
+        // }
+        return canMove(pos, expandX);
       }
 
       return false;
