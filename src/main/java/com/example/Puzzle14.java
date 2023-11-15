@@ -6,16 +6,53 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-
-import javafx.util.Pair;
 
 public class Puzzle14 {
   private static URL resource = Puzzle14.class.getResource("/puzzleinput14.txt");
 
   public static void main(String[] args) throws URISyntaxException, IOException {
     List<String> lines = Files.readAllLines(Paths.get(resource.toURI()));
-    System.out.println(genLayout(lines));
+    System.out.println(solve01(lines));
+  }
+
+  public static int solve01(List<String> lines) {
+    Layout layout = genLayout(lines);
+    int counter = 0;
+
+    // for (ArrayList<Boolean> e : layout.layout) {
+    // System.out.println(Arrays.toString(e.stream().map(el -> el ? "#" :
+    // ".").toArray()));
+    // }
+
+    while (true) {
+      int[] sandPos = Arrays.copyOf(layout.getSand(), layout.getSand().length);
+      boolean fin = false;
+      try {
+        while (layout.canMove(sandPos)) {
+          sandPos = layout.nextPos(sandPos);
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+        fin = true;
+      }
+
+      if (fin) {
+        break;
+      }
+
+      layout.setOccupied(sandPos);
+      counter++;
+
+      // System.out.println(counter);
+      // for (ArrayList<Boolean> e : layout.layout) {
+      // System.out.println(Arrays.toString(e.stream().map(el -> el ? "#" :
+      // ".").toArray()));
+      // }
+    }
+
+    return counter;
   }
 
   private static Layout genLayout(List<String> lines) {
@@ -37,6 +74,13 @@ public class Puzzle14 {
           minY = coords[1];
         }
       }
+    }
+    // or sand position
+    if (500 < minX) {
+      minX = 500;
+    }
+    if (0 < minY) {
+      minY = 0;
     }
 
     for (ArrayList<int[]> line : parsedLines) {
@@ -119,6 +163,62 @@ public class Puzzle14 {
     public Layout(ArrayList<ArrayList<Boolean>> l, int[] sand) {
       this.layout = l;
       this.sand = sand;
+    }
+
+    public int[] getSand() {
+      return this.sand;
+    }
+
+    public boolean canMove(int[] pos) {
+      int x = pos[0];
+      int y = pos[1];
+      if (this.layout.get(x).get(y)) {
+        return this.canMove(new int[] { pos[0], pos[1] - 1 });
+      }
+
+      if (this.layout.get(x).size() == y + 1) {
+        return true;
+      }
+
+      if (this.layout.get(x).get(y + 1) == false) {
+        return true;
+      }
+
+      if (this.layout.get(x - 1).get(y + 1) == false) {
+        return true;
+      }
+
+      if (this.layout.get(x + 1).get(y + 1) == false) {
+        return true;
+      }
+
+      return false;
+    }
+
+    public int[] nextPos(int[] pos) {
+      int x = pos[0];
+      int y = pos[1];
+      if (this.layout.get(x).get(y)) {
+        return this.nextPos(new int[] { pos[0], pos[1] - 1 });
+      }
+
+      if (this.layout.get(x).get(y + 1) == false) {
+        return new int[] { x, y + 1 };
+      }
+
+      if (this.layout.get(x - 1).get(y + 1) == false) {
+        return new int[] { x - 1, y + 1 };
+      }
+
+      if (this.layout.get(x + 1).get(y + 1) == false) {
+        return new int[] { x + 1, y + 1 };
+      }
+
+      return pos;
+    }
+
+    public void setOccupied(int[] pos) {
+      this.layout.get(pos[0]).set(pos[1], true);
     }
   }
 }
